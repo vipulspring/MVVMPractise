@@ -11,10 +11,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import com.singhenterprises.mvvmexample.R
+import com.singhenterprises.mvvmexample.data.db.entities.User
+import com.singhenterprises.mvvmexample.data.network.responses.AuthResponse
 import com.singhenterprises.mvvmexample.databinding.ActivityLoginBinding
 import com.singhenterprises.mvvmexample.util.hide
 import com.singhenterprises.mvvmexample.util.show
 import com.singhenterprises.mvvmexample.util.toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Response
 
 class LoginActivity : AppCompatActivity(), AuthListener {
     lateinit var binding: ActivityLoginBinding
@@ -48,16 +55,19 @@ class LoginActivity : AppCompatActivity(), AuthListener {
         binding.progressBar.show()
     }
 
-    override fun onSuccess(loginResponse: LiveData<String>) {
-        loginResponse.observe(this) {
-            binding.progressBar.hide()
-            toast(it)
-        }
+    override fun onSuccess(user: AuthResponse?) {
+        CoroutineScope(Dispatchers.Main).launch {
+
+              toast(user?.firstName.toString()+ " " + user?.lastName.toString() + " is logged in")
+            }
+
     }
 
     override fun onFailure(message: String) {
         //Thread.sleep(2000)
        //binding.progressBar.hide()
-        toast(message)
+        CoroutineScope(Dispatchers.Main).launch {
+            toast(message)
+        }
     }
 }

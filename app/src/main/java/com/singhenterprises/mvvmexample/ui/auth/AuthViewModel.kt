@@ -3,6 +3,9 @@ package com.singhenterprises.mvvmexample.ui.auth
 import android.view.View
 import androidx.lifecycle.ViewModel
 import com.singhenterprises.mvvmexample.data.repositories.UserRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
 
@@ -19,8 +22,15 @@ class AuthViewModel : ViewModel() {
 
             return
         }
-        val loginResponse = UserRepository().userLogin(email!!, password!!)
-        authListener?.onSuccess(loginResponse)
+        CoroutineScope(Dispatchers.IO).launch {
+            val loginResponse = UserRepository().userLogin(email!!, password!!)
+            if(loginResponse.isSuccessful) {
+                authListener?.onSuccess(loginResponse.body())
+            }
+            else {
+                authListener?.onFailure("Error Code: ${loginResponse.code()}" + loginResponse.body())
+            }
+        }
     }
 
 }
