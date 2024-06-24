@@ -12,7 +12,7 @@ interface MyApi {
     @FormUrlEncoded
     @POST("login")
     fun userLogin(
-        @Field("email") email: String,
+        @Field("username") email: String,
         @Field("password") password: String
     ): Call<ResponseBody>
 
@@ -20,7 +20,7 @@ interface MyApi {
     companion object{
         operator fun invoke(): MyApi{
             return Retrofit.Builder()
-                .baseUrl("https://api.simplifiedcoding.in/course-apis/mvvm/")
+                .baseUrl("https://dummyjson.com/auth/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(MyApi::class.java)

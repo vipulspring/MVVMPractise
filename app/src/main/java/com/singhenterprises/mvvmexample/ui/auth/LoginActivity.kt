@@ -18,6 +18,10 @@ import com.singhenterprises.mvvmexample.util.toast
 
 class LoginActivity : AppCompatActivity(), AuthListener {
     lateinit var binding: ActivityLoginBinding
+
+    companion object{
+        const val TAG = "LoginActivity"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,6 +31,7 @@ class LoginActivity : AppCompatActivity(), AuthListener {
         binding.viewModel = viewModel
         viewModel.authListener = this
         binding.lifecycleOwner = this
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root_layout)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -44,10 +49,10 @@ class LoginActivity : AppCompatActivity(), AuthListener {
     }
 
     override fun onSuccess(loginResponse: LiveData<String>) {
-        loginResponse.observe(this, Observer {
+        loginResponse.observe(this) {
             binding.progressBar.hide()
             toast(it)
-        })
+        }
     }
 
     override fun onFailure(message: String) {
